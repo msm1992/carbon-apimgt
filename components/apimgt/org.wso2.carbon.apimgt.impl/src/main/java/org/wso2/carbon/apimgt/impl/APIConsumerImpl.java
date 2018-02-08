@@ -2443,7 +2443,7 @@ class APIConsumerImpl extends AbstractAPIManager implements APIConsumer {
                                                             "cannot contain leading or trailing white spaces");
         }
 
-        String regex = "[~!#$;%^*+={}\\|\\\\<>\\\"\\'\\/,]";
+        String regex = APIConstants.REGEX_INVALID_CHARS_FOR_APPNAME;
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(application.getName());
         if (matcher.find()) {
@@ -2539,7 +2539,7 @@ class APIConsumerImpl extends AbstractAPIManager implements APIConsumer {
                     "cannot contain leading or trailing white spaces");
         }
 
-        String regex = "[~!#$;%^*+={}\\|\\\\<>\\\"\\'\\/,]";
+        String regex = APIConstants.REGEX_INVALID_CHARS_FOR_APPNAME;
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(application.getName());
         if (matcher.find()) {
