@@ -618,6 +618,10 @@ public class APIStoreHostObject extends ScriptableObject {
             PermissionUpdateUtil.updatePermissionTree(tenantId);
 
             String host = new URL(url).getHost();
+
+            ApiMgtDAO apiMgtDAO = ApiMgtDAO.getInstance();
+            username = apiMgtDAO.getLoginUserName(MultitenantUtils.getTenantAwareUsername(username));
+
             if (!authAdminStub.login(username, password, host)) {
                 handleException("Login failed. Please recheck the username and password and try again.");
             }

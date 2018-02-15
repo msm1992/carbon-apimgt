@@ -7227,7 +7227,7 @@ public class ApiMgtDAO {
      * @return
      * @throws APIManagementException
      */
-    private String getLoginUserName(String userID) throws APIManagementException {
+    public String getLoginUserName(String userID) throws APIManagementException {
         String primaryLogin = userID;
         if (isSecondaryLogin(userID)) {
             primaryLogin = getPrimaryLoginFromSecondary(userID);

@@ -298,12 +298,7 @@ public class APIManagerConfiguration {
                     externalAPIStores.add(store);
                 }
             } else if (APIConstants.LOGIN_CONFIGS.equals(localName)) {
-                Iterator loginConfigIterator = element.getChildrenWithLocalName(APIConstants.LOGIN_CONFIGS);
-                while (loginConfigIterator.hasNext()) {
-                    OMElement loginOMElement = (OMElement) loginConfigIterator.next();
-                    parseLoginConfig(loginOMElement);
-                }
-
+                parseLoginConfig(element);
             } else if (APIConstants.AdvancedThrottleConstants.THROTTLING_CONFIGURATIONS.equals(localName)){
                 setThrottleProperties(serverConfig);
             } else if (APIConstants.WorkflowConfigConstants.WORKFLOW.equals(localName)){
