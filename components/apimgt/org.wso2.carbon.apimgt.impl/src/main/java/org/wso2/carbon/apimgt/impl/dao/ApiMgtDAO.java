@@ -7151,6 +7151,17 @@ public class ApiMgtDAO {
      * @return
      */
     private boolean isUserLoggedInEmail(String userId) {
+        String tenantDomain = MultitenantUtils.getTenantDomain(userId);
+        try{
+            int tenantId =  ServiceReferenceHolder.getInstance().getRealmService().getTenantManager()
+                    .getTenantId(tenantDomain);
+            if (tenantId != MultitenantConstants.INVALID_TENANT_ID) {
+                String tenantAwareUsername = MultitenantUtils.getTenantAwareUsername(userId);
+                return tenantAwareUsername.contains("@");
+            }
+        } catch (Exception e) {
+            log.error("Error while retrieving tenantID");
+        }
         return userId.contains("@");
     }
 

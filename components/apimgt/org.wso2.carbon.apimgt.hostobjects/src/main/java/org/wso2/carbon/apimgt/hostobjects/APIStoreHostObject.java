@@ -619,8 +619,12 @@ public class APIStoreHostObject extends ScriptableObject {
 
             String host = new URL(url).getHost();
 
+            if (tenantId == MultitenantConstants.SUPER_TENANT_ID) {
+                username = MultitenantUtils.getTenantAwareUsername(username);
+            }
+
             ApiMgtDAO apiMgtDAO = ApiMgtDAO.getInstance();
-            username = apiMgtDAO.getLoginUserName(MultitenantUtils.getTenantAwareUsername(username));
+            username = apiMgtDAO.getLoginUserName(username);
 
             if (!authAdminStub.login(username, password, host)) {
                 handleException("Login failed. Please recheck the username and password and try again.");
