@@ -2290,11 +2290,12 @@ public class SQLConstants {
 
     public static final String REMOVE_RESOURCE_SCOPE_SQL =
             " DELETE " +
-                    " FROM " +
-                    "   IDN_OAUTH2_RESOURCE_SCOPE " +
-                    " WHERE " +
-                    "   SCOPE_ID IN ( " +
-                    "       SELECT SCOPE_ID FROM AM_API_SCOPES " + "WHERE API_ID = ? )";
+            " FROM " +
+            "   IDN_OAUTH2_RESOURCE_SCOPE" +
+            " WHERE " +
+            "   SCOPE_ID IN ( " +
+            "       SELECT AM_API_SCOPES.SCOPE_ID FROM AM_API_SCOPES LEFT JOIN IDN_OAUTH2_SCOPE ON AM_API_SCOPES.SCOPE_ID = IDN_OAUTH2_SCOPE.SCOPE_ID" +
+            "          WHERE API_ID = ? AND NAME NOT LIKE 'productscope%')";
 
 
     public static final String REMOVE_SCOPE_SQL =
@@ -2303,7 +2304,9 @@ public class SQLConstants {
             "   IDN_OAUTH2_SCOPE " +
             " WHERE " +
             "   SCOPE_ID IN ( " +
-            "       SELECT SCOPE_ID FROM AM_API_SCOPES " + "WHERE API_ID = ? )";
+            "       SELECT SCOPE_ID FROM AM_API_SCOPES " + "WHERE API_ID = ? )" +
+            " AND " +
+            "   NAME NOT LIKE 'productscope%'";
 
     public static final String GET_RESOURCE_TO_SCOPE_MAPPING_SQL =
             "SELECT " +

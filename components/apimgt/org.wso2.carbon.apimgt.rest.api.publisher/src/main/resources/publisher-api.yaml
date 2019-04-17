@@ -1,4 +1,3 @@
-
 swagger: '2.0'
 ######################################################
 # Prolog
@@ -3619,6 +3618,46 @@ paths:
           schema:
             $ref: '#/definitions/Error'
 
+#############################################################
+# The 'API Product' resource APIs
+#############################################################
+  /api-product:
+    post:
+      x-scope: apim:api_create
+      summary: Create a new API PRODUCT
+      description: |
+        This operation can be used to create a new API PRODUCT - currently this bundles all existing apis to a new product
+      tags:
+        - API PRODUCT (Individual)
+      parameters:
+        - in: body
+          name: body
+          description: |
+            API object that needs to be added
+          required: true
+          schema:
+            $ref: '#/definitions/APIProduct'
+        - $ref: '#/parameters/Content-Type'
+
+      responses:
+        201:
+          description: |
+            Created.
+            Successful response with the newly created object as entity in the body.
+            Location header contains URL of newly created entity.
+        400:
+          description: |
+            Bad Request.
+            Invalid request or validation error.
+          schema:
+            $ref: '#/definitions/Error'
+        415:
+          description: |
+            Unsupported Media Type.
+            The entity of the request was in a not supported format.
+          schema:
+            $ref: '#/definitions/Error'
+
 ######################################################
 # Parameters - required by some of the APIs above
 ######################################################
@@ -5081,3 +5120,12 @@ definitions:
         type: string
         description: The resource policy content
         example: "<header description=\"SOAPAction\" name=\"SOAPAction\" scope=\"transport\" value=\"http://ws.cdyne.com/PhoneVerify/query/CheckPhoneNumber\"/>"
+
+  APIProduct:
+      title: API Product
+      properties:
+        name:
+          type: string
+          description: Name of the API
+          example: CalculatorAPI
+

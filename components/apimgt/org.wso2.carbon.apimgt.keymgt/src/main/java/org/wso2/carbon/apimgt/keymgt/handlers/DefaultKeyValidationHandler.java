@@ -22,6 +22,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.apimgt.api.APIManagementException;
 import org.wso2.carbon.apimgt.api.model.AccessTokenInfo;
+import org.wso2.carbon.apimgt.api.model.Scope;
 import org.wso2.carbon.apimgt.impl.APIConstants;
 import org.wso2.carbon.apimgt.impl.dto.APIKeyValidationInfoDTO;
 import org.wso2.carbon.apimgt.impl.factory.KeyManagerHolder;
@@ -39,6 +40,7 @@ import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 public class DefaultKeyValidationHandler extends AbstractKeyValidationHandler {
 
@@ -177,8 +179,15 @@ public class DefaultKeyValidationHandler extends AbstractKeyValidationHandler {
             //validate scope from all the validators
             for (OAuth2ScopeValidator validator : oAuth2ScopeValidators) {
                 if (validator != null) {
-                    if (validator.validateScope(accessTokenDO, resource)) {
-                        isValid = true;
+                    if ("API".equals(apiKeyValidationInfoDTO.getSubscriptionType())) {
+                        accessTokenDO.setSubscriptionType("API");
+                        if (validator.validateScope(accessTokenDO, resource)) {
+                            isValid = true;
+                        } else {
+                            isValid = false;
+                        }
+                    } else if ("API-PRODUCT".equals(apiKeyValidationInfoDTO.getSubscriptionType())) {
+                        //TODO: implement
                     } else {
                         if (log.isDebugEnabled()) {
                             log.debug("Scope validation failed from "+ validator);

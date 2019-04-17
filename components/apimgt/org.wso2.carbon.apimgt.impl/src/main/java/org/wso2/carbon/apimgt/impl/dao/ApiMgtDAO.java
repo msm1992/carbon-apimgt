@@ -12778,4 +12778,81 @@ public class ApiMgtDAO {
         }
         return application;
     }
+
+    /*
+     * A new method is introduced to keep product scope addition seperate from normal oauth scopes
+     */
+    public void addProductScope(Scope scope, List<API> apiList, int tenantID) throws APIManagementException{
+        //add product scope to scope table - IDN_OAUTH2_SCOPE
+        //attach scope to all apis in the product - AM_API_SCOPE
+        //attach scope to all api resources bundled in the product - IDN_OAUTH2_SCOPE_RESOURCE
+
+        Connection conn = null;
+        PreparedStatement scopeEntryPrepSt = null, scopeLinkPrepSt = null, scopeResourcePrepSt = null;
+        ResultSet rs = null;
+        int scope_id = -1;
+
+        String scopeEntry = SQLConstants.ADD_SCOPE_ENTRY_SQL;
+        String scopeLink = SQLConstants.ADD_SCOPE_LINK_SQL;
+        String scopeResourceEntry = SQLConstants.ADD_OAUTH2_RESOURCE_SCOPE_SQL;
+
+        try {
+            conn = APIMgtDBUtil.getConnection();
+            conn.setAutoCommit(false);
+
+            String scopeId = "SCOPE_ID";
+            if (conn.getMetaData().getDriverName().contains("PostgreSQL")) {
+                scopeId = "scope_id";
+            }
+
+            scopeEntryPrepSt = conn.prepareStatement(scopeEntry, new String[]{scopeId});
+            scopeEntryPrepSt.setString(1, scope.getKey());
+            scopeEntryPrepSt.setString(2, scope.getName());
+            scopeEntryPrepSt.setString(3, scope.getDescription());
+            scopeEntryPrepSt.setInt(4, tenantID);
+
+            scopeEntryPrepSt.execute();
+            rs = scopeEntryPrepSt.getGeneratedKeys();
+            if (rs.next()) {
+                scope_id = rs.getInt(1);
+                scope.setId(scope_id);
+            }
+
+            scopeLinkPrepSt = conn.prepareStatement(scopeLink);
+            scopeResourcePrepSt = conn.prepareStatement(scopeResourceEntry);
+            for (API api : apiList) {
+                APIIdentifier apiId = api.getId();
+                int id = getAPIID(apiId, conn);
+                scopeLinkPrepSt.setInt(1, id);
+                scopeLinkPrepSt.setInt(2, scope.getId());
+                scopeLinkPrepSt.addBatch();
+
+                Set<URITemplate> uriTemplates = api.getUriTemplates();
+                for (URITemplate template : uriTemplates) {
+                    scopeResourcePrepSt.setString(1, APIUtil.getResourceKey(api, template));
+                    scopeResourcePrepSt.setInt(2, scope_id);
+                    scopeResourcePrepSt.setInt(3, tenantID);
+                    scopeResourcePrepSt.addBatch();
+                }
+            }
+
+            scopeLinkPrepSt.executeBatch();
+            scopeResourcePrepSt.executeBatch();
+            conn.commit();
+
+        } catch (SQLException e) {
+            try {
+                if (conn != null) {
+                    conn.rollback();
+                }
+            } catch (SQLException e1) {
+                handleException("Error occurred while Rolling back changes done on API Product Post", e1);
+            }
+            handleException("Error occurred while adding a product scope : " + scope.getName(), e);
+        } finally {
+            APIMgtDBUtil.closeAllConnections(scopeEntryPrepSt, conn, rs);
+            APIMgtDBUtil.closeAllConnections(scopeLinkPrepSt, null, null);
+        }
+
+    }
 }

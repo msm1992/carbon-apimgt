@@ -555,4 +555,10 @@ public class UserAwareAPIProvider extends APIProviderImpl {
         checkCreatePermission();
         return super.getCertificateContent(alias);
     }
+
+    @Override
+    public void addAPIProduct(String productName, String tenantDomain) throws APIManagementException {
+        checkCreatePermission();
+        super.addAPIProduct(productName, tenantDomain);
+    }
 }

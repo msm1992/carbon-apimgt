@@ -60,6 +60,7 @@ public class APIKeyValidationInfoDTO implements Serializable {
     private String subscriberTenantDomain;
     private String spikeArrestUnit;
     private boolean stopOnQuotaReach;
+    private String subscriptionType;
 
     public List<String> getThrottlingDataList() {
         return throttlingDataList;
@@ -316,5 +317,12 @@ public class APIKeyValidationInfoDTO implements Serializable {
         this.subscriberTenantDomain = subscriberTenantDomain;
     }
 
+    public String getSubscriptionType() {
+        return subscriptionType;
+    }
+
+    public void setSubscriptionType(String subscriptionType) {
+        this.subscriptionType = subscriptionType;
+    }
 }
 
