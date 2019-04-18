@@ -1933,7 +1933,7 @@ class APIProviderImpl extends AbstractAPIManager implements APIProvider {
         if (!StringUtils.isBlank(api.getAuthorizationHeader())) {
             authorizationHeader = api.getAuthorizationHeader();
         } else {
-            //Retrieves the auth configuration from tenant registry or api-manager.xml if not available 
+            //Retrieves the auth configuration from tenant registry or api-manager.xml if not available
             // in tenant registry
             authorizationHeader = APIUtil.getOAuthConfiguration(tenantId, APIConstants.AUTHORIZATION_HEADER);
         }
@@ -2939,7 +2939,7 @@ class APIProviderImpl extends AbstractAPIManager implements APIProvider {
             int apiId = apiMgtDAO.getAPIID(identifier, null);
             long subsCount = apiMgtDAO.getAPISubscriptionCountByAPI(identifier);
             if (subsCount > 0) {
-                //Logging as a WARN since this isn't an error scenario. 
+                //Logging as a WARN since this isn't an error scenario.
                 String message = "Cannot remove the API as active subscriptions exist.";
                 log.warn(message);
                 throw new APIManagementException(message);
@@ -2990,7 +2990,7 @@ class APIProviderImpl extends AbstractAPIManager implements APIProvider {
             if (registry.resourceExists(wsdlArchivePath)) {
                 registry.delete(wsdlArchivePath);
             }
-            
+
             /*Remove API Definition Resource - swagger*/
             String apiDefinitionFilePath = APIConstants.API_DOC_LOCATION + RegistryConstants.PATH_SEPARATOR +
                     identifier.getApiName() + '-' + identifier.getVersion() + '-' + identifier.getProviderName();
@@ -3092,7 +3092,7 @@ class APIProviderImpl extends AbstractAPIManager implements APIProvider {
             /*
             WorkflowExecutor apiStateChangeWFExecutor = WorkflowExecutorFactory.getInstance().
                     getWorkflowExecutor(WorkflowConstants.WF_TYPE_AM_API_STATE);
-  
+
             WorkflowDTO wfDTO = apiMgtDAO.retrieveWorkflowFromInternalReference(Integer.toString(apiId),
                     WorkflowConstants.WF_TYPE_AM_API_STATE);
             if(wfDTO != null && WorkflowStatus.CREATED == wfDTO.getStatus()){
@@ -4375,7 +4375,7 @@ class APIProviderImpl extends AbstractAPIManager implements APIProvider {
                 }
 
                 // only change the lifecycle if approved
-                // apiWFState is null when simple wf executor is used because wf state is not stored in the db. 
+                // apiWFState is null when simple wf executor is used because wf state is not stored in the db.
                 if (WorkflowStatus.APPROVED.equals(apiWFState) || apiWFState == null) {
                     targetStatus = "";
                     apiArtifact.invokeAction(action, APIConstants.API_LIFE_CYCLE);
@@ -6050,6 +6050,7 @@ class APIProviderImpl extends AbstractAPIManager implements APIProvider {
             API api = super.getLightweightAPIByUUID(apiProductResource.getApiId(), tenantDomain);
             // if API does not exist, getLightweightAPIByUUID() method throws exception. so no need to handle NULL
 
+            apiProductResource.setApiIdentifier(api.getId());
             List<URITemplate> apiResources = apiProductResource.getResources();
 
             Map<String, URITemplate> templateMap = apiMgtDAO.getURITemplatesForAPI(api);
@@ -6077,7 +6078,7 @@ class APIProviderImpl extends AbstractAPIManager implements APIProvider {
 
         String uuid = UUID.randomUUID().toString();
         product.setUuid(uuid);
-        apiMgtDAO.addAPIProduct(product);
+        apiMgtDAO.addAPIProduct(product, tenantId);
         return uuid;
     }
 
