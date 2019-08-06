@@ -141,7 +141,11 @@ function Configuration(props) {
                             {(api.apiType === API.CONSTS.API) &&
                                 (
                                     <React.Fragment>
-                                        <Typography component='p' variant='subtitle2' className={parentClasses.subtitle}>
+                                        <Typography
+                                            component='p'
+                                            variant='subtitle2'
+                                            className={parentClasses.subtitle}
+                                        >
                                             <FormattedMessage
                                                 id='Apis.Details.NewOverview.Configuration.version'
                                                 defaultMessage='Version'
@@ -157,7 +161,11 @@ function Configuration(props) {
                             {(api.apiType === API.CONSTS.API) &&
                                 (
                                     <React.Fragment>
-                                        <Typography component='p' variant='subtitle2' className={parentClasses.subtitle}>
+                                        <Typography
+                                            component='p'
+                                            variant='subtitle2'
+                                            className={parentClasses.subtitle}
+                                        >
                                             <FormattedMessage
                                                 id='Apis.Details.NewOverview.Configuration.default.version'
                                                 defaultMessage='Default Version'
