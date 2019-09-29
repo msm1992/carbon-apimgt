@@ -542,6 +542,46 @@ public class APIGatewayManager {
     }
 
     /**
+     * Removed an API Product from the configured Gateways
+     *
+     * @param apiProduct
+     *            - The APIProduct to be removed
+     * @param tenantDomain
+     *            - Tenant Domain of the publisher
+     */
+    public Map<String, String> removeFromGateway(APIProduct apiProduct, String tenantDomain) {
+        Map<String, String> failedEnvironmentsMap = new HashMap<String, String>(0);
+        if (apiProduct.getEnvironments() != null) {
+            for (String environmentName : apiProduct.getEnvironments()) {
+                try {
+                    Environment environment = environments.get(environmentName);
+                    //If the environment is removed from the configuration, continue without removing
+                    if (environment == null) {
+                        continue;
+                    }
+
+                    APIGatewayAdminClient client = new APIGatewayAdminClient(environment);
+
+                    APIIdentifier id = new APIIdentifier(PRODUCT_PREFIX, apiProduct.getId().getName(), PRODUCT_VERSION);
+                    client.deleteApi(tenantDomain, id);
+                    //todo: chcek mutual ssl support in api products
+                    //todo : check mediation policies support in api products
+                } catch (AxisFault axisFault) {
+                    /*
+                    didn't throw this exception to handle multiple gateway publishing
+                    if gateway is unreachable we collect that environments into map with issue and show on popup in ui
+                    therefore this didn't break the gateway unpublisihing if one gateway unreachable
+                    */
+                    log.error("Error occurred when removing from gateway " + environmentName,
+                            axisFault);
+                    failedEnvironmentsMap.put(environmentName, axisFault.getMessage());
+                }
+            }
+        }
+        return failedEnvironmentsMap;
+    }
+
+    /**
      * add websoocket api to the gateway
      *
      * @param api

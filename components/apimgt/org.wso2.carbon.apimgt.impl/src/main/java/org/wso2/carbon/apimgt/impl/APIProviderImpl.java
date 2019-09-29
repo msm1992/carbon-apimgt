@@ -2075,6 +2075,23 @@ class APIProviderImpl extends AbstractAPIManager implements APIProvider {
         return failedEnvironment;
     }
 
+    private Map<String, String> removeFromGateway(APIProduct apiProduct) {
+        String tenantDomain = null;
+        Map<String, String> failedEnvironment;
+        if (apiProduct.getId().getProviderName().contains("AT")) {
+            String provider = apiProduct.getId().getProviderName().replace("-AT-", "@");
+            tenantDomain = MultitenantUtils.getTenantDomain(provider);
+        }
+
+        failedEnvironment = removeFromGateway(apiProduct, tenantDomain);
+        if (log.isDebugEnabled()) {
+            String logMessage = "API Product Name: " + apiProduct.getId().getName() + ", API Product Version " + apiProduct.getId().getVersion()
+                    + " deleted from gateway";
+            log.debug(logMessage);
+        }
+        return failedEnvironment;
+    }
+
     public Map<String, String> removeDefaultAPIFromGateway(API api) {
         String tenantDomain = null;
         if (api.getId().getProviderName().contains("AT")) {
@@ -6199,6 +6216,11 @@ class APIProviderImpl extends AbstractAPIManager implements APIProvider {
         return gatewayManager.removeFromGateway(api, tenantDomain);
     }
 
+    protected Map<String, String> removeFromGateway(APIProduct apiProduct, String tenantDomain) {
+        APIGatewayManager gatewayManager = APIGatewayManager.getInstance();
+        return gatewayManager.removeFromGateway(apiProduct, tenantDomain);
+    }
+
     protected int getTenantId(String tenantDomain) throws UserStoreException {
         return ServiceReferenceHolder.getInstance().getRealmService().getTenantManager().getTenantId(tenantDomain);
     }
@@ -6769,6 +6791,7 @@ class APIProviderImpl extends AbstractAPIManager implements APIProvider {
             }
 
             GenericArtifact apiProductArtifact = artifactManager.getGenericArtifact(apiArtifactResourceUUID);
+            String environments = apiProductArtifact.getAttribute(APIConstants.API_OVERVIEW_ENVIRONMENTS);
             //Delete the dependencies associated  with the api product artifact
             GovernanceArtifact[] dependenciesArray = apiProductArtifact.getDependencies();
             if (dependenciesArray.length > 0) {
@@ -6780,7 +6803,20 @@ class APIProviderImpl extends AbstractAPIManager implements APIProvider {
             //delete registry resources
             artifactManager.removeGenericArtifact(productResourceUUID);
 
-            //todo : remove from gateways
+            APIManagerConfiguration config = getAPIManagerConfiguration();
+            boolean gatewayExists = !config.getApiGatewayEnvironments().isEmpty();
+            String gatewayType = config.getFirstProperty(APIConstants.API_GATEWAY_TYPE);
+
+            APIProduct apiProduct = new APIProduct(identifier);
+            // gatewayType check is required when API Management is deployed on
+            // other servers to avoid synapse
+            if (gatewayExists && "Synapse".equals(gatewayType)) {
+                apiProduct.setEnvironments(APIUtil.extractEnvironmentsForAPI(environments));
+                removeFromGateway(apiProduct);
+
+            } else {
+                log.debug("Gateway is not existed for the current API Provider");
+            }
 
             apiMgtDAO.deleteAPIProduct(identifier);
             if (log.isDebugEnabled()) {
