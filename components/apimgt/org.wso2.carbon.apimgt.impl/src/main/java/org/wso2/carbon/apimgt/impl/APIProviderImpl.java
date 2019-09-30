@@ -452,6 +452,33 @@ class APIProviderImpl extends AbstractAPIManager implements APIProvider {
     }
 
     /**
+     * Returns usage details of a particular API
+     *
+     * @param apiProductId API Product identifier
+     * @return UserApplicationAPIUsages for given provider
+     * @throws org.wso2.carbon.apimgt.api.APIManagementException If failed to get UserApplicationAPIUsage
+     */
+    @Override
+    public List<SubscribedAPI> getAPIProductUsageByAPIProductId(APIProductIdentifier apiProductId) throws APIManagementException {
+        APIProductIdentifier apiIdEmailReplaced = new APIProductIdentifier(APIUtil.replaceEmailDomain(apiProductId.getProviderName()),
+                apiProductId.getName(), apiProductId.getVersion());
+        UserApplicationAPIUsage[] allApiProductResult = apiMgtDAO.getAllAPIProductUsageByProvider(apiProductId.getProviderName());
+        List<SubscribedAPI> subscribedAPIs = new ArrayList<SubscribedAPI>();
+        for (UserApplicationAPIUsage usage : allApiProductResult) {
+            for (SubscribedAPI apiSubscription : usage.getApiSubscriptions()) {
+                APIProductIdentifier subsApiProductId = apiSubscription.getProductId();
+                APIProductIdentifier subsApiProductIdEmailReplaced = new APIProductIdentifier(
+                        APIUtil.replaceEmailDomain(subsApiProductId.getProviderName()), subsApiProductId.getName(),
+                        subsApiProductId.getVersion());
+                if (subsApiProductIdEmailReplaced.equals(apiIdEmailReplaced)) {
+                    subscribedAPIs.add(apiSubscription);
+                }
+            }
+        }
+        return subscribedAPIs;
+    }
+
+    /**
      * Shows how a given consumer uses the given API.
      *
      * @param apiIdentifier APIIdentifier
@@ -6765,9 +6792,16 @@ class APIProviderImpl extends AbstractAPIManager implements APIProvider {
         //this is the product rxt instance path
         String apiProductArtifactPath = APIUtil.getAPIProductPath(identifier);
 
-        //todo : check whether there are any subscriptions for this api
-
         try {
+            //int apiId = apiMgtDAO.getAPIID(identifier, null);
+            long subsCount = apiMgtDAO.getAPISubscriptionCountByAPI(identifier);
+            if (subsCount > 0) {
+                //Logging as a WARN since this isn't an error scenario.
+                String message = "Cannot remove the API Product as active subscriptions exist.";
+                log.warn(message);
+                throw new APIManagementException(message);
+            }
+
             GovernanceUtils.loadGovernanceArtifacts((UserRegistry) registry);
             GenericArtifactManager artifactManager = APIUtil.getArtifactManager(registry, APIConstants.API_KEY);
             if (artifactManager == null) {
