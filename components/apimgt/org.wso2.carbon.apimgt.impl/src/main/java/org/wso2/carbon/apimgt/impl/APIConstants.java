@@ -1830,5 +1830,10 @@ public final class APIConstants {
     public static final String API_KEY_REVOKE_PATH = "/apikey/revoke";
 
     public static final String SKIP_ROLES_BY_REGEX = "skipRolesByRegex";
+    
+    /**
+     * API categories related constants
+     */
+    public static final String API_CATEGORIES_CATEGORY_NAME = "apiCategories_categoryName";
 
 }
