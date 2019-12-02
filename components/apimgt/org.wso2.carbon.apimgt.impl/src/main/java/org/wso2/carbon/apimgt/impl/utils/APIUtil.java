@@ -71,13 +71,7 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.w3c.dom.Document;
 import org.wso2.carbon.CarbonConstants;
-import org.wso2.carbon.apimgt.api.APIManagementException;
-import org.wso2.carbon.apimgt.api.APIMgtAuthorizationFailedException;
-import org.wso2.carbon.apimgt.api.APIMgtInternalException;
-import org.wso2.carbon.apimgt.api.ExceptionCodes;
-import org.wso2.carbon.apimgt.api.LoginPostExecutor;
-import org.wso2.carbon.apimgt.api.NewPostLoginExecutor;
-import org.wso2.carbon.apimgt.api.PasswordResolver;
+import org.wso2.carbon.apimgt.api.*;
 import org.wso2.carbon.apimgt.api.doc.model.APIDefinition;
 import org.wso2.carbon.apimgt.api.doc.model.APIResource;
 import org.wso2.carbon.apimgt.api.doc.model.Operation;
@@ -112,12 +106,7 @@ import org.wso2.carbon.apimgt.api.model.policy.PolicyConstants;
 import org.wso2.carbon.apimgt.api.model.policy.QuotaPolicy;
 import org.wso2.carbon.apimgt.api.model.policy.RequestCountLimit;
 import org.wso2.carbon.apimgt.api.model.policy.SubscriptionPolicy;
-import org.wso2.carbon.apimgt.impl.APIConstants;
-import org.wso2.carbon.apimgt.impl.APIMRegistryServiceImpl;
-import org.wso2.carbon.apimgt.impl.APIManagerAnalyticsConfiguration;
-import org.wso2.carbon.apimgt.impl.APIManagerConfiguration;
-import org.wso2.carbon.apimgt.impl.PasswordResolverFactory;
-import org.wso2.carbon.apimgt.impl.ThrottlePolicyDeploymentManager;
+import org.wso2.carbon.apimgt.impl.*;
 import org.wso2.carbon.apimgt.impl.clients.ApplicationManagementServiceClient;
 import org.wso2.carbon.apimgt.impl.clients.OAuthAdminClient;
 import org.wso2.carbon.apimgt.impl.clients.UserInformationRecoveryClient;
@@ -9834,7 +9823,9 @@ public final class APIUtil {
 
         //get all categories available in tenant
         int tenantID = APIUtil.getTenantIdFromTenantDomain(tenantDomain);
-        List<APICategory> availableAPICategories = APICategoryUtil.getAllAPICategoriesOfTenant(tenantID);
+
+        APIAdmin apiAdmin = new APIAdminImpl();
+        List<APICategory> availableAPICategories = apiAdmin.getAllAPICategoriesOfTenant(tenantID);
 
         if (!availableAPICategories.isEmpty()) {
             try {
@@ -9871,6 +9862,7 @@ public final class APIUtil {
      */
     private static List<APICategory> getAPICategoriesFromAPIGovernanceArtifact(GovernanceArtifact artifact, int tenantID)
             throws GovernanceException, APIManagementException {
+        APIAdmin apiAdmin = new APIAdminImpl();
         String[] categoriesOfAPI = artifact.getAttributes(APIConstants.API_CATEGORIES_CATEGORY_ID);
 
         List<APICategory> categoryList = new ArrayList<>();
@@ -9878,7 +9870,7 @@ public final class APIUtil {
         if (ArrayUtils.isNotEmpty(categoriesOfAPI)) {
             //category array retrieved from artifact has only the category ID, therefore we need to fetch categories
             //and fill out missing attributes before attaching the list to the api
-            List<APICategory> allCategories = APICategoryUtil.getAllAPICategoriesOfTenant(tenantID);
+            List<APICategory> allCategories = apiAdmin.getAllAPICategoriesOfTenant(tenantID);
 
             //todo-category: optimize this loop with breaks
             for (String categoryID : categoriesOfAPI) {
