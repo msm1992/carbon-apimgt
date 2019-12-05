@@ -17,7 +17,7 @@
 import React from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import { withStyles } from '@material-ui/core';
-import TagCloudListing from 'AppComponents/Apis/Listing/TagCloudListing';
+import CategoryListing from 'AppComponents/Apis/Listing/CategoryListing';
 import Apis from 'AppComponents/Apis/Apis';
 import Landing from 'AppComponents/LandingPage/Landing';
 import ApplicationFormHandler from 'AppComponents/Applications/ApplicationFormHandler';
@@ -39,7 +39,7 @@ function getRedirectingPath(theme) {
     theme.custom.tagWise.active &&
     theme.custom.tagWise.style === 'page'
     ) {
-        return '/api-groups';
+        return '/api-categories';
     } else {
         return 'apis';
     }
@@ -56,7 +56,7 @@ function AppRouts(props) {
         <Switch>
             <Redirect exact from='/' to={getRedirectingPath(theme)} />
             <Route path='/home' component={Landing} />
-            <Route path='/api-groups' component={TagCloudListing} />
+            <Route path='/api-categories' component={CategoryListing} />
             <Route path='/(apis|api-products)' component={Apis} />
             {isAuthenticated && (
                 <React.Fragment>
