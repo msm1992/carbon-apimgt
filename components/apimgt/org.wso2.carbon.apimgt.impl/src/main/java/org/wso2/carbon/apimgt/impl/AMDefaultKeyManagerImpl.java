@@ -24,6 +24,7 @@ import feign.auth.BasicAuthRequestInterceptor;
 import feign.gson.GsonDecoder;
 import feign.gson.GsonEncoder;
 import feign.slf4j.Slf4jLogger;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
@@ -693,7 +694,8 @@ public class AMDefaultKeyManagerImpl extends AbstractKeyManager {
 
         ScopeDTO scopeDTO = null;
         try {
-            scopeDTO = scopeClient.getScopeByName(name);
+            scopeDTO = scopeClient.getScopeByName(new String(
+                    Base64.encodeBase64URLSafeString(name.getBytes())));
         } catch (KeyManagerClientException ex) {
             handleException("Cannot read scope : " + name, ex);
         }
