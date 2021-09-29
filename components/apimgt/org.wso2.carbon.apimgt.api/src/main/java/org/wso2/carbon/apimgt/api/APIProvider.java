@@ -1823,4 +1823,23 @@ public interface APIProvider extends APIManager {
     String generateApiKey(String apiId) throws APIManagementException;
 
     List<APIRevisionDeployment> getAPIRevisionsDeploymentList(String apiId) throws APIManagementException;
+
+    /**
+     * Get all API Operation Level Mediation Policies of an API
+     *
+     * @param apiId API UUID
+     * @return List of API Operation Level Mediation Policies
+     * @throws APIManagementException if failed to fetch API Operation Policies
+     */
+
+    Set<URITemplate> getURITemplatesWithOperationPolicies(String apiId) throws APIManagementException;
+
+    /**
+     * Set existing operation policy mapping to the URI Templates
+     *
+     * @param apiId API UUID
+     * @param uriTemplates Set of URI Templates
+     * @throws APIManagementException
+     */
+    void setOperationPoliciesToURITemplates(String apiId, Set<URITemplate> uriTemplates) throws APIManagementException;
 }
