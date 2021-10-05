@@ -1842,4 +1842,55 @@ public interface APIProvider extends APIManager {
      * @throws APIManagementException
      */
     void setOperationPoliciesToURITemplates(String apiId, Set<URITemplate> uriTemplates) throws APIManagementException;
+
+    /**
+     * Adds ResourceEndpoint to an API
+     *
+     * @param uuid                API Identifier
+     * @param endpoint            Resource Endpoint
+     * @param organization        Identifier of an organization
+     * @return UUID of the resource endpoint
+     * @throws APIManagementException if failed to add resource endpoint
+     */
+    String addResourceEndpoint(String uuid, ResourceEndpoint endpoint, String organization)
+            throws APIManagementException;
+
+    /**
+     * Gets Resource Endpoint by UUID
+     *
+     * @param uuid          Resource Endpoint UUID
+     * @param organization  Organization
+     * @return
+     * @throws APIManagementException
+     */
+    ResourceEndpoint getResourceEndpointByUUID(String uuid, String organization) throws APIManagementException;
+
+    /**
+     * Get resource endpoints list of an API
+     *
+     * @param apiId         API UUID
+     * @param organization  Organization
+     * @return List of Resource Endpoints
+     * @throws APIManagementException
+     */
+    List<ResourceEndpoint> getResourceEndpoints(String apiId, String organization) throws APIManagementException;
+
+    /**
+     * Update Resource Endpoint
+     *
+     * @param endpoint      Resource endpoint
+     * @param organization  Organization
+     * @throws APIManagementException
+     */
+    void updateResourceEndpoint(ResourceEndpoint endpoint, String organization) throws APIManagementException;
+
+    /**
+     * Deletes Resource Endpoint
+     *
+     * @param uuid          Resource Endpoint UUID
+     * @param organization  Organization
+     * @throws APIManagementException
+     */
+    void deleteResourceEndpoint(String uuid, String organization) throws  APIManagementException;
+
 }
