@@ -38,42 +38,7 @@ import org.wso2.carbon.apimgt.api.dto.ConditionDTO;
 import org.wso2.carbon.apimgt.api.dto.ConditionGroupDTO;
 import org.wso2.carbon.apimgt.api.dto.KeyManagerConfigurationDTO;
 import org.wso2.carbon.apimgt.api.dto.UserApplicationAPIUsage;
-import org.wso2.carbon.apimgt.api.model.API;
-import org.wso2.carbon.apimgt.api.model.APICategory;
-import org.wso2.carbon.apimgt.api.model.APIIdentifier;
-import org.wso2.carbon.apimgt.api.model.APIInfo;
-import org.wso2.carbon.apimgt.api.model.APIKey;
-import org.wso2.carbon.apimgt.api.model.APIProduct;
-import org.wso2.carbon.apimgt.api.model.APIProductIdentifier;
-import org.wso2.carbon.apimgt.api.model.APIProductResource;
-import org.wso2.carbon.apimgt.api.model.APIRevision;
-import org.wso2.carbon.apimgt.api.model.APIRevisionDeployment;
-import org.wso2.carbon.apimgt.api.model.APIStatus;
-import org.wso2.carbon.apimgt.api.model.APIStore;
-import org.wso2.carbon.apimgt.api.model.ApiTypeWrapper;
-import org.wso2.carbon.apimgt.api.model.Application;
-import org.wso2.carbon.apimgt.api.model.BlockConditionsDTO;
-import org.wso2.carbon.apimgt.api.model.Comment;
-import org.wso2.carbon.apimgt.api.model.CommentList;
-import org.wso2.carbon.apimgt.api.model.DeployedAPIRevision;
-import org.wso2.carbon.apimgt.api.model.Environment;
-import org.wso2.carbon.apimgt.api.model.Identifier;
-import org.wso2.carbon.apimgt.api.model.KeyManager;
-import org.wso2.carbon.apimgt.api.model.LifeCycleEvent;
-import org.wso2.carbon.apimgt.api.model.MonetizationUsagePublishInfo;
-import org.wso2.carbon.apimgt.api.model.OAuthAppRequest;
-import org.wso2.carbon.apimgt.api.model.OAuthApplicationInfo;
-import org.wso2.carbon.apimgt.api.model.OperationPolicy;
-import org.wso2.carbon.apimgt.api.model.Pagination;
-import org.wso2.carbon.apimgt.api.model.ResourcePath;
-import org.wso2.carbon.apimgt.api.model.Scope;
-import org.wso2.carbon.apimgt.api.model.SharedScopeUsage;
-import org.wso2.carbon.apimgt.api.model.SubscribedAPI;
-import org.wso2.carbon.apimgt.api.model.Subscriber;
-import org.wso2.carbon.apimgt.api.model.Tier;
-import org.wso2.carbon.apimgt.api.model.URITemplate;
-import org.wso2.carbon.apimgt.api.model.VHost;
-import org.wso2.carbon.apimgt.api.model.Workflow;
+import org.wso2.carbon.apimgt.api.model.*;
 import org.wso2.carbon.apimgt.api.model.botDataAPI.BotDetectionData;
 import org.wso2.carbon.apimgt.api.model.graphql.queryanalysis.CustomComplexityDetails;
 import org.wso2.carbon.apimgt.api.model.graphql.queryanalysis.GraphqlComplexityInfo;
@@ -7416,7 +7381,7 @@ public class ApiMgtDAO {
                     OperationPolicy policy = new OperationPolicy();
                     policy.setPolicyType(OperationPolicy.PolicyType.valueOf(rs.getString("POLICY_TYPE")));
                     policy.setDirection(rs.getString("DIRECTION"));
-                    policy.setParameters(getPolicyParameterMapFromJSONString(rs.getString("PARAMETERS")));
+                    policy.setParameters(convertJSONStringToMap(rs.getString("PARAMETERS")));
                     operationPolicies.add(policy);
                 }
             }
@@ -7446,7 +7411,7 @@ public class ApiMgtDAO {
                     if (uriTemplate != null) {
                         OperationPolicy policy = new OperationPolicy();
                         policy.setPolicyType(OperationPolicy.PolicyType.valueOf(rs.getString("POLICY_TYPE")));
-                        policy.setParameters(getPolicyParameterMapFromJSONString(rs.getString("PARAMETERS")));
+                        policy.setParameters( convertJSONStringToMap(rs.getString("PARAMETERS")));
                         policy.setDirection(rs.getString("DIRECTION"));
                         uriTemplate.addOperationPolicy(policy);
                     }
@@ -7470,7 +7435,7 @@ public class ApiMgtDAO {
                     if (uriTemplate != null) {
                         OperationPolicy policy = new OperationPolicy();
                         policy.setPolicyType(OperationPolicy.PolicyType.valueOf(rs.getString("POLICY_TYPE")));
-                        policy.setParameters(getPolicyParameterMapFromJSONString(rs.getString("PARAMETERS")));
+                        policy.setParameters(convertJSONStringToMap(rs.getString("PARAMETERS")));
                         policy.setDirection(rs.getString("DIRECTION"));
                         uriTemplate.addOperationPolicy(policy);
                     }
@@ -14719,7 +14684,7 @@ public class ApiMgtDAO {
                                         policy.setPolicyType(
                                                 OperationPolicy.PolicyType.valueOf(policiesResult.getString("POLICY_TYPE")));
                                         policy.setDirection(policiesResult.getString("DIRECTION"));
-                                        policy.setParameters(getPolicyParameterMapFromJSONString(policiesResult.getString("PARAMETERS")));
+                                        policy.setParameters(convertJSONStringToMap(policiesResult.getString("PARAMETERS")));
                                         operationPolicies.add(policy);
                                     }
                                     uriTemplate.setOperationPolicies(operationPolicies);
@@ -14778,7 +14743,7 @@ public class ApiMgtDAO {
                                         policy.setPolicyType(
                                                 OperationPolicy.PolicyType.valueOf(policiesResult.getString("POLICY_TYPE")));
                                         policy.setDirection(policiesResult.getString("DIRECTION"));
-                                        policy.setParameters(getPolicyParameterMapFromJSONString(policiesResult.getString("PARAMETERS")));
+                                        policy.setParameters(convertJSONStringToMap(policiesResult.getString("PARAMETERS")));
                                         operationPolicies.add(policy);
                                     }
                                     uriTemplate.setOperationPolicies(operationPolicies);
@@ -17665,7 +17630,7 @@ public class ApiMgtDAO {
                     }
                     OperationPolicy operationPolicy = new OperationPolicy();
                     operationPolicy.setPolicyType(OperationPolicy.PolicyType.valueOf(rs.getString("POLICY_TYPE")));
-                    operationPolicy.setParameters(getPolicyParameterMapFromJSONString(rs.getString("PARAMETERS")));
+                    operationPolicy.setParameters(convertJSONStringToMap(rs.getString("PARAMETERS")));
                     operationPolicy.setDirection(rs.getString("DIRECTION"));
                     uriTemplate.addOperationPolicy(operationPolicy);
                     uriTemplate.setHTTPVerb(httpMethod);
@@ -17681,17 +17646,150 @@ public class ApiMgtDAO {
         return uriTemplateList;
     }
 
-    private Map<String, String> getPolicyParameterMapFromJSONString(String paramString) throws APIManagementException {
-        Map<String, String> parameterMap = null;
-        if (StringUtils.isNotEmpty(paramString)) {
+    public String addResourceEndpoint(String apiUUID, ResourceEndpoint endpoint, String tenantDomain)
+            throws APIManagementException {
+        String uuid  = UUID.randomUUID().toString();
+        try (Connection connection = APIMgtDBUtil.getConnection();
+                PreparedStatement prepStmt = connection
+                        .prepareStatement(SQLConstants.ResourceEndpointConstants.ADD_RESOURCE_ENDPOINT)) {
+            int apiId = getAPIID(apiUUID, connection);
+            int tenantId = APIUtil.getTenantIdFromTenantDomain(tenantDomain);
+
+            Gson gson = new Gson();
+            String securityConfig = null;
+            String generalConfig = null;
+            if (!endpoint.getSecurityConfig().isEmpty()) {
+                securityConfig = gson.toJson(endpoint.getSecurityConfig());
+            }
+
+            if (!endpoint.getGeneralConfig().isEmpty()) {
+                generalConfig = gson.toJson(endpoint.getGeneralConfig());
+            }
+
+            prepStmt.setInt(1, apiId);
+            prepStmt.setString(2, uuid);
+            prepStmt.setString(3, endpoint.getName());
+            prepStmt.setString(4, endpoint.getEndpointType());
+            prepStmt.setString(5, endpoint.getUrl());
+            prepStmt.setString(6, securityConfig);
+            prepStmt.setString(7, generalConfig);
+            prepStmt.setInt(8, tenantId);
+            prepStmt.executeUpdate();
+        } catch (SQLException e) {
+            handleException("Error while adding resource endpoint to API " + uuid, e);
+        }
+        return uuid;
+    }
+
+    public ResourceEndpoint getResourceEndpointByUUID(String uuid, String tenantDomain) throws  APIManagementException {
+        ResourceEndpoint resourceEndpoint = null;
+        try (Connection connection = APIMgtDBUtil.getConnection();
+                PreparedStatement prepStmt = connection
+                        .prepareStatement(SQLConstants.ResourceEndpointConstants.GET_RESOURCE_ENDPOINT_BY_UUID)) {
+            int tenantId = APIUtil.getTenantIdFromTenantDomain(tenantDomain);
+            prepStmt.setString(1, uuid);
+            prepStmt.setInt(2, tenantId);
+            try (ResultSet rs = prepStmt.executeQuery()) {
+                if (rs.next()) {
+                    resourceEndpoint = new ResourceEndpoint();
+                    resourceEndpoint.setId(uuid);
+                    resourceEndpoint.setName(rs.getString("ENDPOINT_NAME"));
+                    resourceEndpoint.setEndpointType(rs.getString("ENDPOINT_TYPE"));
+                    resourceEndpoint.setUrl(rs.getString("URL"));
+                    resourceEndpoint.setSecurityConfig(convertJSONStringToMap(rs.getString("SECURITY_CONFIG")));
+                    resourceEndpoint.setGeneralConfig(convertJSONStringToMap(rs.getString("ENDPOINT_CONFIG")));
+                }
+            }
+        } catch (SQLException e) {
+            handleException("Error while fetching resource endpoint " + uuid, e);
+        }
+        return resourceEndpoint;
+    }
+
+    public void updateResourceEndpoint(ResourceEndpoint endpoint, String tenantDomain)
+            throws APIManagementException {
+        try (Connection connection = APIMgtDBUtil.getConnection();
+                PreparedStatement prepStmt = connection
+                        .prepareStatement(SQLConstants.ResourceEndpointConstants.UPDATE_RESOURCE_ENDPOINT)) {
+            int tenantId = APIUtil.getTenantIdFromTenantDomain(tenantDomain);
+
+            Gson gson = new Gson();
+            String securityConfig = null;
+            String generalConfig = null;
+            if (!endpoint.getSecurityConfig().isEmpty()) {
+                securityConfig = gson.toJson(endpoint.getSecurityConfig());
+            }
+
+            if (!endpoint.getGeneralConfig().isEmpty()) {
+                generalConfig = gson.toJson(endpoint.getGeneralConfig());
+            }
+
+            prepStmt.setString(1, endpoint.getName());
+            prepStmt.setString(2, endpoint.getEndpointType());
+            prepStmt.setString(3, endpoint.getUrl());
+            prepStmt.setString(4, securityConfig);
+            prepStmt.setString(5, generalConfig);
+            prepStmt.setString(6, endpoint.getId());
+            prepStmt.setInt(7, tenantId);
+
+            prepStmt.executeUpdate();
+        } catch (SQLException e) {
+            handleException("Error while updating resource endpoint", e);
+        }
+    }
+
+    public void deleteResourceEndpoint(String uuid, String tenantDomain) throws APIManagementException {
+        try (Connection connection = APIMgtDBUtil.getConnection();
+                PreparedStatement prepStmt = connection
+                        .prepareStatement(SQLConstants.ResourceEndpointConstants.DELETE_RESOURCE_ENDPOINT)) {
+            int tenantId = APIUtil.getTenantIdFromTenantDomain(tenantDomain);
+            prepStmt.setString(1, uuid);
+            prepStmt.setInt(2, tenantId);
+            prepStmt.executeUpdate();
+        } catch (SQLException e) {
+            handleException("Error while deleting resource endpoint " + uuid, e);
+        }
+    }
+
+    public List<ResourceEndpoint> getResourceEndpoints(String uuid, String tenantDomain) throws APIManagementException {
+        List<ResourceEndpoint> endpointList = new ArrayList<>();
+
+        try (Connection connection = APIMgtDBUtil.getConnection();
+                PreparedStatement prepStmt = connection
+                        .prepareStatement(SQLConstants.ResourceEndpointConstants.GET_RESOURCE_ENDPOINTS_OF_API)) {
+            int tenantId = APIUtil.getTenantIdFromTenantDomain(tenantDomain);
+            int apiId = getAPIID(uuid);
+            prepStmt.setInt(1, apiId);
+            prepStmt.setInt(2, tenantId);
+            try (ResultSet rs = prepStmt.executeQuery()) {
+                while (rs.next()) {
+                    ResourceEndpoint resourceEndpoint = new ResourceEndpoint();
+                    resourceEndpoint.setId(rs.getString("UUID"));
+                    resourceEndpoint.setName(rs.getString("ENDPOINT_NAME"));
+                    resourceEndpoint.setEndpointType(rs.getString("ENDPOINT_TYPE"));
+                    resourceEndpoint.setUrl(rs.getString("URL"));
+                    resourceEndpoint.setSecurityConfig(convertJSONStringToMap(rs.getString("SECURITY_CONFIG")));
+                    resourceEndpoint.setGeneralConfig(convertJSONStringToMap(rs.getString("ENDPOINT_CONFIG")));
+                    endpointList.add(resourceEndpoint);
+                }
+            }
+        } catch (SQLException e) {
+            handleException("Error while fetching resource endpoints of API " + uuid, e);
+        }
+        return endpointList;
+    }
+
+    private Map<String, String> convertJSONStringToMap(String jsonString) throws APIManagementException {
+        Map<String, String> map = null;
+        if (StringUtils.isNotEmpty(jsonString)) {
             try {
                 ObjectMapper objectMapper = new ObjectMapper();
-                parameterMap = objectMapper.readValue(paramString, Map.class);
+                map = objectMapper.readValue(jsonString, Map.class);
             } catch (IOException e) {
-                handleException("Error while parsing operation policy parameter JSON string", e);
+                handleException("Error while parsing JSON string", e);
             }
         }
-        return parameterMap;
+        return map;
     }
 
     private void updateLatestRevisionNumber(Connection connection, String apiUUID, int revisionId) throws SQLException {
