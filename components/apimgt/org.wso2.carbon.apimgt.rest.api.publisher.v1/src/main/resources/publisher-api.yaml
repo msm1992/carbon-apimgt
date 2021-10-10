@@ -11424,6 +11424,7 @@ components:
             - ADD_QUERY_PARAM
             - REMOVE_QUERY_PARAM
             - MOCK_RESPONSE
+            - CHANGE_ENDPOINT
         parameters:
           type: object
           additionalProperties:
@@ -11450,6 +11451,9 @@ components:
           type: string
         name:
           type: string
+          enum:
+            - HTTP
+            - ADDRESS
         endpointType:
           type: string
         url:
