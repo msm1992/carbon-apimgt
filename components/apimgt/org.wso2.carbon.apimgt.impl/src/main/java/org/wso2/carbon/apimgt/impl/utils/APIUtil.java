@@ -107,7 +107,6 @@ import org.wso2.carbon.apimgt.api.model.Documentation;
 import org.wso2.carbon.apimgt.api.model.DocumentationType;
 import org.wso2.carbon.apimgt.api.model.EndpointSecurity;
 import org.wso2.carbon.apimgt.api.model.Environment;
-import org.wso2.carbon.apimgt.api.model.FederatedGatewayAgentConfiguration;
 import org.wso2.carbon.apimgt.api.model.Identifier;
 import org.wso2.carbon.apimgt.api.model.KeyManagerConfiguration;
 import org.wso2.carbon.apimgt.api.model.KeyManagerConnectorConfiguration;
@@ -160,6 +159,7 @@ import org.wso2.carbon.apimgt.impl.caching.CacheProvider;
 import org.wso2.carbon.apimgt.impl.dao.ApiMgtDAO;
 import org.wso2.carbon.apimgt.impl.dao.CorrelationConfigDAO;
 import org.wso2.carbon.apimgt.impl.dao.ScopesDAO;
+import org.wso2.carbon.apimgt.impl.deployer.ExternalGatewayDeployer;
 import org.wso2.carbon.apimgt.impl.dto.APIKeyValidationInfoDTO;
 import org.wso2.carbon.apimgt.impl.dto.APISubscriptionInfoDTO;
 import org.wso2.carbon.apimgt.impl.dto.ConditionDto;
@@ -10163,9 +10163,9 @@ public final class APIUtil {
     /**
      * Check whether there are external environments registered
      */
-    public static boolean isAnyExternalGateWayProviderExists() {
+    public static boolean isAnyExternalGateWayProviderExists() throws APIManagementException {
 
-        Map<String, Environment> gatewayEnvironments = APIUtil.getReadOnlyGatewayEnvironments();
+        Map<String, Environment> gatewayEnvironments = APIUtil.getEnvironments();
         for (Environment environment : gatewayEnvironments.values()) {
             if (!APIConstants.WSO2_GATEWAY_ENVIRONMENT.equals(environment.getProvider())) {
                 return true;
@@ -11113,8 +11113,8 @@ public final class APIUtil {
                 APIConstants.ORGANIZATION_WIDE_APPLICATION_UPDATE_ENABLED);
     }
 
-    public static Map<String, FederatedGatewayAgentConfiguration> getFederatedGatewayConfigurations() {
+    public static Map<String, ExternalGatewayDeployer> getExternalGatewayDeployers() {
 
-        return ServiceReferenceHolder.getInstance().getFederatedGatewayConnectorConfigurations();
+        return ServiceReferenceHolder.getInstance().getExternalGatewayDeployers();
     }
 }

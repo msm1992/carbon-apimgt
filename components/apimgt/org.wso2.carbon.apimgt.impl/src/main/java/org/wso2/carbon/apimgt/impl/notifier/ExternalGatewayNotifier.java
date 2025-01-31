@@ -43,9 +43,13 @@ public class ExternalGatewayNotifier extends DeployAPIInGatewayNotifier {
 
     @Override
     public boolean publishEvent(Event event) throws NotifierException {
-        if (APIUtil.isAnyExternalGateWayProviderExists()) {
-            apiMgtDAO = ApiMgtDAO.getInstance();
-            process(event);
+        try {
+            if (APIUtil.isAnyExternalGateWayProviderExists()) {
+                apiMgtDAO = ApiMgtDAO.getInstance();
+                process(event);
+            }
+        } catch (APIManagementException e) {
+            throw new NotifierException(e.getMessage());
         }
         return true;
     }
@@ -59,7 +63,8 @@ public class ExternalGatewayNotifier extends DeployAPIInGatewayNotifier {
     private void process(Event event) throws NotifierException {
         DeployAPIInGatewayEvent deployAPIInGatewayEvent;
         deployAPIInGatewayEvent = (DeployAPIInGatewayEvent) event;
-        if (isExternalGatewayAvailableToDeployment(deployAPIInGatewayEvent))
+        //todo: uncomment after proper implementation
+        //if (isExternalGatewayAvailableToDeployment(deployAPIInGatewayEvent))
             if (APIConstants.EventType.DEPLOY_API_IN_GATEWAY.name().equals(event.getType())) {
                 deployApi(deployAPIInGatewayEvent);
             } else if (APIConstants.EventType.REMOVE_API_FROM_GATEWAY.name().equals(event.getType())) {
