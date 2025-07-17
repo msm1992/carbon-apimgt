@@ -778,13 +778,10 @@ public class ApisApiServiceImplUtils {
     public static Set<URITemplate> generateMCPFeatures(BackendEndpoint backendEndpoint, Set<URITemplate> uriTemplates)
             throws APIManagementException {
 
-        if (backendEndpoint.getEndpointConfig() == null || backendEndpoint.getEndpointConfig().isEmpty()) {
-            throw new APIManagementException("Backend operation mapping is not available.",
-                    ExceptionCodes.BACKEND_OPERATION_MAPPING_NOT_FOUND);
-        }
         APIDefinition parser = new OAS3Parser();
-        Set<URITemplate> mcpTools = parser.generateMCPTools(backendEndpoint, APIConstants.AI.MCP_DEFAULT_FEATURE_TYPE
-                , true, uriTemplates);
+        Set<URITemplate> mcpTools = parser.generateMCPTools(backendEndpoint.getBackendApiDefinition(),
+                backendEndpoint.getBackendId(), APIConstants.AI.MCP_DEFAULT_FEATURE_TYPE,
+                true, uriTemplates);
         if (mcpTools == null) {
             throw new APIManagementException("Failed to generate MCP feature.");
         }

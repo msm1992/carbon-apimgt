@@ -1624,6 +1624,13 @@ public class PublisherCommonUtils {
             SwaggerData swaggerData = new SwaggerData(apiToAdd);
             String apiDefinition = oasParser.generateAPIDefinition(swaggerData);
             apiToAdd.setSwaggerDefinition(apiDefinition);
+            //TODO: PASAN
+//            API api = apiProvider.getAPIbyUUID(apiDto.getOperations().get(0).getOp, organization);
+//            api.setOrganization(organization);
+//            String updatedDefinition = RestApiCommonUtil.retrieveSwaggerDefinition(apiId, api, apiProvider);
+//            Set<URITemplate> uriTemplates = generateMCPFeatures(backendEndpoint, apiToAdd.getUriTemplates());
+//            apiToAdd.setUriTemplates(uriTemplates);
+//            apiToAdd.getBackendEndpoints().add(backendEndpoint);
             artifactType = ArtifactType.API;
         } else {
             AsyncApiParser asyncApiParser = new AsyncApiParser();
@@ -1682,6 +1689,26 @@ public class PublisherCommonUtils {
         }
         return apiToAdd;
     }
+
+//    /**
+//     * Generates MCP feature URITemplates from the given backend endpoint.
+//     *
+//     * @param backendEndpoint the backend endpoint with configuration
+//     * @param uriTemplates    existing URI templates as context
+//     * @return a set of generated URITemplates for MCP features
+//     * @throws APIManagementException if endpoint config is missing or generation fails
+//     */
+//    public static Set<URITemplate> generateMCPFeatures(BackendEndpoint backendEndpoint, Set<URITemplate> uriTemplates)
+//            throws APIManagementException {
+//
+//        APIDefinition parser = new OAS3Parser();
+//        Set<URITemplate> mcpTools = parser.generateMCPTools(backendEndpoint, APIConstants.AI.MCP_DEFAULT_FEATURE_TYPE
+//                , true, uriTemplates);
+//        if (mcpTools == null) {
+//            throw new APIManagementException("Failed to generate MCP feature.");
+//        }
+//        return mcpTools;
+//    }
 
     /**
      * Validate endpoint configurations of {@link APIDTO} for web socket endpoints.
