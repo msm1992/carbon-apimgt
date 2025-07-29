@@ -708,7 +708,6 @@ public class ApisApiServiceImplUtils {
             backendEndpoint.setBackendName(APIConstants.AI.MCP_DEFAULT_BACKEND_ENDPOINT_NAME);
             backendEndpoint.setBackendApiDefinition(validationResponse.getJsonContent());
             backendEndpoint.setEndpointConfig(apiToAdd.getEndpointConfig());
-            apiToAdd.setEndpointConfig(null);
 
             swaggerData = new SwaggerData(apiToAdd);
             definitionToAdd = new OAS3Parser().generateAPIDefinition(swaggerData);
