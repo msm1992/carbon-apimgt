@@ -47,4 +47,12 @@ public class BackendOperation implements Serializable {
 
         this.verb = verb;
     }
+
+    @Override
+    public String toString() {
+        return "BackendOperation {" +
+                "target='" + target + '\'' +
+                ", verb='" + verb + '\'' +
+                '}';
+    }
 }
