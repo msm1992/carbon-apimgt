@@ -2553,6 +2553,7 @@ public class APIMappingUtil {
             mappingDTO.setApiId(apiOperationMapping.getApiUuid());
             mappingDTO.setApiName(apiOperationMapping.getApiName());
             mappingDTO.setApiVersion(apiOperationMapping.getApiVersion());
+            mappingDTO.setApiContext(apiOperationMapping.getApiContext());
             mappingDTO.setBackendOperation(operationDTO);
 
             operationsDTO.setApiOperationMapping(mappingDTO);

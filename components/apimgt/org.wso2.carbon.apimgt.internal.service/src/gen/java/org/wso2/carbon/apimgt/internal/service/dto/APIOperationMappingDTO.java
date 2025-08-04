@@ -1,10 +1,10 @@
-package org.wso2.carbon.apimgt.rest.api.publisher.v1.dto;
+package org.wso2.carbon.apimgt.internal.service.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import org.wso2.carbon.apimgt.rest.api.publisher.v1.dto.BackendOperationDTO;
+import org.wso2.carbon.apimgt.internal.service.dto.BackendOperationDTO;
 import javax.validation.constraints.*;
 
 
@@ -21,28 +21,27 @@ import javax.validation.Valid;
 
 public class APIOperationMappingDTO   {
   
-    private String apiId = null;
+    private String apiUUID = null;
     private String apiName = null;
     private String apiVersion = null;
     private String apiContext = null;
     private BackendOperationDTO backendOperation = null;
 
   /**
-   * UUID of the targetAPI 
    **/
-  public APIOperationMappingDTO apiId(String apiId) {
-    this.apiId = apiId;
+  public APIOperationMappingDTO apiUUID(String apiUUID) {
+    this.apiUUID = apiUUID;
     return this;
   }
 
   
-  @ApiModelProperty(example = "01234567-0123-0123-0123-012345678901", value = "UUID of the targetAPI ")
-  @JsonProperty("apiId")
-  public String getApiId() {
-    return apiId;
+  @ApiModelProperty(value = "")
+  @JsonProperty("apiUUID")
+  public String getApiUUID() {
+    return apiUUID;
   }
-  public void setApiId(String apiId) {
-    this.apiId = apiId;
+  public void setApiUUID(String apiUUID) {
+    this.apiUUID = apiUUID;
   }
 
   /**
@@ -53,9 +52,9 @@ public class APIOperationMappingDTO   {
   }
 
   
-  @ApiModelProperty(example = "PizzaShackAPI", value = "")
+  @ApiModelProperty(value = "")
   @JsonProperty("apiName")
- @Pattern(regexp="(^[^~!@#;:%^*()+={}|\\\\<>\"',&$\\[\\]/]*$)") @Size(min=1,max=150)  public String getApiName() {
+  public String getApiName() {
     return apiName;
   }
   public void setApiName(String apiName) {
@@ -70,9 +69,9 @@ public class APIOperationMappingDTO   {
   }
 
   
-  @ApiModelProperty(example = "1.0.0", value = "")
+  @ApiModelProperty(value = "")
   @JsonProperty("apiVersion")
- @Pattern(regexp="^[^~!@#;:%^*()+={}|\\\\<>\"',&/$\\[\\]\\s+/]+$") @Size(min=1,max=30)  public String getApiVersion() {
+  public String getApiVersion() {
     return apiVersion;
   }
   public void setApiVersion(String apiVersion) {
@@ -87,9 +86,9 @@ public class APIOperationMappingDTO   {
   }
 
   
-  @ApiModelProperty(example = "1.0.0", value = "")
+  @ApiModelProperty(value = "")
   @JsonProperty("apiContext")
- @Size(min=1,max=30)  public String getApiContext() {
+  public String getApiContext() {
     return apiContext;
   }
   public void setApiContext(String apiContext) {
@@ -124,7 +123,7 @@ public class APIOperationMappingDTO   {
       return false;
     }
     APIOperationMappingDTO apIOperationMapping = (APIOperationMappingDTO) o;
-    return Objects.equals(apiId, apIOperationMapping.apiId) &&
+    return Objects.equals(apiUUID, apIOperationMapping.apiUUID) &&
         Objects.equals(apiName, apIOperationMapping.apiName) &&
         Objects.equals(apiVersion, apIOperationMapping.apiVersion) &&
         Objects.equals(apiContext, apIOperationMapping.apiContext) &&
@@ -133,7 +132,7 @@ public class APIOperationMappingDTO   {
 
   @Override
   public int hashCode() {
-    return Objects.hash(apiId, apiName, apiVersion, apiContext, backendOperation);
+    return Objects.hash(apiUUID, apiName, apiVersion, apiContext, backendOperation);
   }
 
   @Override
@@ -141,7 +140,7 @@ public class APIOperationMappingDTO   {
     StringBuilder sb = new StringBuilder();
     sb.append("class APIOperationMappingDTO {\n");
     
-    sb.append("    apiId: ").append(toIndentedString(apiId)).append("\n");
+    sb.append("    apiUUID: ").append(toIndentedString(apiUUID)).append("\n");
     sb.append("    apiName: ").append(toIndentedString(apiName)).append("\n");
     sb.append("    apiVersion: ").append(toIndentedString(apiVersion)).append("\n");
     sb.append("    apiContext: ").append(toIndentedString(apiContext)).append("\n");

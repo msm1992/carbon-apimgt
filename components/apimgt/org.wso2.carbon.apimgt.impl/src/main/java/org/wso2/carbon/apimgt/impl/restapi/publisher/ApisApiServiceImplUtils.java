@@ -18,6 +18,7 @@
 
 package org.wso2.carbon.apimgt.impl.restapi.publisher;
 
+import org.wso2.carbon.apimgt.api.model.ApiOperationMapping;
 import org.wso2.carbon.apimgt.api.model.BackendEndpoint;
 import org.apache.http.client.HttpClient;
 import software.amazon.awssdk.core.exception.SdkClientException;
