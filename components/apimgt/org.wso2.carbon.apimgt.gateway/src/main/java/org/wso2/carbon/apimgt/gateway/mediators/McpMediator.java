@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.Constants;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpStatus;
@@ -120,7 +121,8 @@ public class McpMediator extends AbstractMediator implements ManagedLifecycle {
             org.apache.axis2.context.MessageContext axis2MessageContext =
                     ((Axis2MessageContext) messageContext).getAxis2MessageContext();
             String contentType = (String) axis2MessageContext.getProperty(Constants.Configuration.CONTENT_TYPE);
-            if (APIConstants.APPLICATION_JSON_MEDIA_TYPE.equals(contentType)) {
+            if (!StringUtils.isEmpty(contentType) && StringUtils.startsWith(contentType,
+                    APIConstants.APPLICATION_JSON_MEDIA_TYPE)) {
                 buildMCPResponse(messageContext);
             }
         }
